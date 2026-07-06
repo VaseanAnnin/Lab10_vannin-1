@@ -16,14 +16,14 @@ class WordAnalyzer:
     def __init__(self, filepath):
         self.__filepath = Path(filepath)
         self.__frequency = {}
-        pass
+        
 
     def process_file(self):
         try:
             if self.__filepath.exists() == False:
                 raise FileNotFoundError
             
-            translator = str.maketrans("","",string.punctuation)
+            translator = str.maketrans("","",string.punctuation + "“”‘’—")
             with self.__filepath.open("r") as file:
                 for line in file:
                     line = line.lower()
@@ -51,9 +51,9 @@ class WordAnalyzer:
         sorted_words = sorted(self.__frequency.keys())
 
         for word in sorted_words:
-            print(word, "::", self.__frequency[word])
+            print(f"{word: <10} :: {self.__frequency[word]}")
 
-        pass
+        
 
 def main():
     files = {
@@ -66,6 +66,7 @@ def main():
     running = True
     while running:
         print("--- Word Analyzer ---")
+        print("Please select a file to analyze:")
         for key in files:
             print(f"{key}. {files[key][0]}")
         print("5. Exit")
@@ -73,6 +74,7 @@ def main():
         user_input = input("Enter your choice (1-5): ")
 
         if user_input == '5':
+
             running = False
         elif user_input not in files:
             print("Please enter a valid number")
@@ -82,7 +84,7 @@ def main():
             file_path = files[user_input][1]
             analyzer = WordAnalyzer(file_path)
 
-            result = analyzer.process_file
+            result = analyzer.process_file()
 
             if result:
                 analyzer.print_report()
